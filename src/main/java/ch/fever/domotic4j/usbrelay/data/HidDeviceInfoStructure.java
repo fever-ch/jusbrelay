@@ -1,4 +1,4 @@
-package org.hid4java.jna;
+package ch.fever.domotic4j.usbrelay.data;
 
 import com.sun.jna.Structure;
 import com.sun.jna.WString;

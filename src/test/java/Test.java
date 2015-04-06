@@ -1,8 +1,8 @@
-import ch.fever.domotic4j.usbrelay.Controller;
-import ch.fever.domotic4j.usbrelay.Relay;
-import ch.fever.domotic4j.usbrelay.State;
-import ch.fever.domotic4j.usbrelay.UsbRelayNative;
-import ch.fever.domotic4j.usbrelay.decttech.Driver;
+import ch.fever.usbrelay.Controller;
+import ch.fever.usbrelay.Relay;
+import ch.fever.usbrelay.State;
+import ch.fever.usbrelay.UsbRelayNative;
+import ch.fever.usbrelay.decttech.Driver;
 
 import java.util.LinkedList;
 import java.util.List;

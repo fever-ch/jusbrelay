@@ -1,4 +1,4 @@
-package ch.fever.domotic4j.usbrelay.data;
+package ch.fever.usbrelay.data;
 
 import com.sun.jna.Structure;
 import com.sun.jna.WString;

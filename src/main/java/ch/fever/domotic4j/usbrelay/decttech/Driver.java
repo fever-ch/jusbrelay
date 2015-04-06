@@ -109,7 +109,8 @@ public class Driver implements ch.fever.domotic4j.usbrelay.Driver {
             p = p.next;
         }
 
-        usn.hid_free_enumeration(penum.getPointer());
+        if (penum != null)
+            usn.hid_free_enumeration(penum.getPointer());
 
         usn.hid_exit();
         return list;

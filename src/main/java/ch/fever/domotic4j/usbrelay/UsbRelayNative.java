@@ -18,6 +18,9 @@ public interface UsbRelayNative extends Library {
     Pointer hid_open_path(String path);
 
     int hid_get_feature_report(Pointer device, Buffer.ByReference data, int length);
+
+    int hid_send_feature_report(Pointer device, Buffer.ByReference data, int length);
+
     void hid_close(Pointer device);
 
     void hid_exit();

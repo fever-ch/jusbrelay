@@ -1,49 +1,56 @@
+import ch.fever.domotic4j.usbrelay.Controller;
+import ch.fever.domotic4j.usbrelay.Relay;
+import ch.fever.domotic4j.usbrelay.State;
 import ch.fever.domotic4j.usbrelay.UsbRelayNative;
-import ch.fever.domotic4j.usbrelay.data.Buffer;
-import ch.fever.domotic4j.usbrelay.data.HidDeviceInfoStructure;
-import com.sun.jna.Pointer;
+import ch.fever.domotic4j.usbrelay.decttech.Driver;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class Test {
     UsbRelayNative usn = UsbRelayNative.INSTANCE;
 
     @org.junit.Test
-    public void doTest() {
+    public void testDriver() throws InterruptedException {
 
-        short vendor_id = 0x16c0;
-        short product_id = 0x05df;
-        HidDeviceInfoStructure penum = usn.hid_enumerate(vendor_id, product_id);
-        HidDeviceInfoStructure p = penum;
-
-        while (p != null) {
+List<Relay> list=new LinkedList<>();
 
 
-            Pointer pp = usn.hid_open_path(p.path);
-
-            usn.hid_get_feature_report(pp, new Buffer(9), 1);
-            for (int i = 1; i <= 8; i++)
-                operate_relay(pp, (byte) i, (byte) 0xff);
-
-            for (int i = 1; i <= 8; i++)
-                operate_relay(pp, (byte) i, (byte) 0xfd);
-            usn.hid_close(pp);
-            p = p.next;
-
+        for (Controller c : (new Driver()).listControllers()) {
+            System.out.println(c.getIdentifier());
+            for (Relay r : c.getRelays()) {
+                list.add(r);
+            }
         }
 
+        for (Controller c : (new Driver()).listControllers()) {
+            for (Relay r : c.getRelays()) {
+                list.add(r);
+            }
+        }
 
-        usn.hid_free_enumeration(p);
-        usn.hid_exit();
+        for (Relay r : list) {
+
+                r.setState(State.ACTIVE);
+            System.err.println(r.getState());
+             //   Thread.sleep(10);
+
+            System.err.println(r.getState());
+             //   Thread.sleep(10);
+
+        }
+        Thread.sleep(1000);
+
+        for (Relay r : list) {
+
+
+            System.err.println(r.getState());
+            //   Thread.sleep(10);
+            r.setState(State.INACTIVE);
+            System.err.println(r.getState());
+            //   Thread.sleep(10);
+
+        }
     }
 
-
-    int operate_relay(Pointer handle, byte relay, byte state) {
-        Buffer buf = new Buffer(9);
-        buf.buffer[0] = 0x0;
-        buf.buffer[1] = state;
-        buf.buffer[2] = relay;
-        for (int i = 3; i <= 8; i++)
-            buf.buffer[i] = 0x0;
-        return usn.hid_write(handle, buf, buf.size());
-
-    }
 }

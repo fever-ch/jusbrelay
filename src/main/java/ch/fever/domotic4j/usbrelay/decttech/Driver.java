@@ -35,21 +35,19 @@ public class Driver implements ch.fever.domotic4j.usbrelay.Driver {
             return ret;
         }
 
-        public DectController(HidDeviceInfoStructure p) {
-
-            path = p.path;
-            Pointer pointer = usn.hid_open_path(path);
-
-            DectStatus buff = new DectStatus();
-            usn.hid_get_feature_report(pointer, buff, buff.size());
-
-            identifier = buff.getIdentifier();
-
-            Matcher matcher = pattern.matcher(p.productString.toString());
+        public DectController(HidDeviceInfoStructure infoStructure) {
+            Matcher matcher = pattern.matcher(infoStructure.productString.toString());
 
             nrRelays = matcher.matches() ? Integer.parseInt(matcher.group(1)) : 0;
 
-            usn.hid_close(pointer);
+            path = infoStructure.path;
+
+            identifier = apply(pp ->
+            {
+                DectStatus dectStatus = new DectStatus();
+                usn.hid_get_feature_report(pp, dectStatus, dectStatus.size());
+                return dectStatus.getIdentifier();
+            });
         }
 
 
@@ -79,19 +77,17 @@ public class Driver implements ch.fever.domotic4j.usbrelay.Driver {
                 buf.bytesArray[1] = st;
                 buf.bytesArray[2] = (byte) (id + 1);
 
-
                 apply(p -> usn.hid_write(p, buf, buf.size()));
             }
 
             @Override
             public State getState() {
                 return apply(p ->
-
                 {
-                    DectStatus buff = new DectStatus();
-                    usn.hid_get_feature_report(p, buff, buff.size());
-                    short state = ByteOrder.nativeOrder().equals(ByteOrder.BIG_ENDIAN) ? buff.state : Short.reverseBytes(buff.state);
-                    return ((state >> id )& 1) == 1 ? State.ACTIVE : State.INACTIVE;
+                    DectStatus dectStatus = new DectStatus();
+                    usn.hid_get_feature_report(p, dectStatus, dectStatus.size());
+                    short state = ByteOrder.nativeOrder().equals(ByteOrder.BIG_ENDIAN) ? dectStatus.state : Short.reverseBytes(dectStatus.state);
+                    return ((state >> id) & 1) == 1 ? State.ACTIVE : State.INACTIVE;
                 });
 
             }
@@ -104,6 +100,7 @@ public class Driver implements ch.fever.domotic4j.usbrelay.Driver {
         List<Controller> list = new LinkedList<>();
         short vendor_id = 0x16c0;
         short product_id = 0x05df;
+
         HidDeviceInfoStructure penum = usn.hid_enumerate(vendor_id, product_id);
         HidDeviceInfoStructure p = penum;
 
@@ -112,9 +109,9 @@ public class Driver implements ch.fever.domotic4j.usbrelay.Driver {
             p = p.next;
         }
 
+        usn.hid_free_enumeration(penum.getPointer());
 
-        usn.hid_free_enumeration(p);
-          usn.hid_exit();
+        usn.hid_exit();
         return list;
     }
 }

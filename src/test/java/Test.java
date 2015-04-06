@@ -13,7 +13,7 @@ public class Test {
     @org.junit.Test
     public void testDriver() throws InterruptedException {
 
-List<Relay> list=new LinkedList<>();
+        List<Relay> list = new LinkedList<>();
 
 
         for (Controller c : (new Driver()).listControllers()) {
@@ -24,33 +24,30 @@ List<Relay> list=new LinkedList<>();
         }
 
         for (Controller c : (new Driver()).listControllers()) {
+            System.out.println(c.getIdentifier());
             for (Relay r : c.getRelays()) {
                 list.add(r);
             }
         }
 
-        for (Relay r : list) {
 
-                r.setState(State.ACTIVE);
-            System.err.println(r.getState());
-             //   Thread.sleep(10);
+        for (Relay r : list)
+            r.setState(State.ACTIVE);
 
-            System.err.println(r.getState());
-             //   Thread.sleep(10);
 
-        }
         Thread.sleep(1000);
 
-        for (Relay r : list) {
-
-
-            System.err.println(r.getState());
-            //   Thread.sleep(10);
+        for (Relay r : list)
             r.setState(State.INACTIVE);
-            System.err.println(r.getState());
-            //   Thread.sleep(10);
 
+        while(true){
+            for (Relay r : list) {
+                r.swapState();
+                Thread.sleep(100);
+            }
         }
+
+
     }
 
 }

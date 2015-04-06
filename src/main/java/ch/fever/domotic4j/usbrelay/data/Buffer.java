@@ -2,7 +2,6 @@ package ch.fever.domotic4j.usbrelay.data;
 
 import com.sun.jna.Structure;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -20,6 +19,6 @@ public class Buffer extends Structure implements Structure.ByReference {
 
     @Override
     protected List getFieldOrder() {
-        return Arrays.asList("bytesArray");
+        return Collections.singletonList("bytesArray");
     }
 }

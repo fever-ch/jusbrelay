@@ -1,4 +1,4 @@
-package ch.fever.domotic4j.usbrelay;
+package ch.fever.usbrelay;
 
 import java.util.List;
 

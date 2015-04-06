@@ -1,12 +1,12 @@
-package ch.fever.domotic4j.usbrelay.decttech;
+package ch.fever.usbrelay.decttech;
 
 
-import ch.fever.domotic4j.usbrelay.Controller;
-import ch.fever.domotic4j.usbrelay.Relay;
-import ch.fever.domotic4j.usbrelay.State;
-import ch.fever.domotic4j.usbrelay.UsbRelayNative;
-import ch.fever.domotic4j.usbrelay.data.Buffer;
-import ch.fever.domotic4j.usbrelay.data.HidDeviceInfoStructure;
+import ch.fever.usbrelay.Controller;
+import ch.fever.usbrelay.Relay;
+import ch.fever.usbrelay.State;
+import ch.fever.usbrelay.UsbRelayNative;
+import ch.fever.usbrelay.data.Buffer;
+import ch.fever.usbrelay.data.HidDeviceInfoStructure;
 import com.sun.jna.Pointer;
 
 import java.nio.ByteOrder;
@@ -16,7 +16,7 @@ import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Driver implements ch.fever.domotic4j.usbrelay.Driver {
+public class Driver implements ch.fever.usbrelay.Driver {
     final private UsbRelayNative usn = UsbRelayNative.INSTANCE;
 
 

@@ -1,4 +1,4 @@
-package ch.fever.domotic4j.usbrelay.decttech;
+package ch.fever.usbrelay.decttech;
 
 import com.sun.jna.Structure;
 

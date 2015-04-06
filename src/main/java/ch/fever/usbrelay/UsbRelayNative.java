@@ -1,9 +1,9 @@
-package ch.fever.domotic4j.usbrelay;
+package ch.fever.usbrelay;
 
 import com.sun.jna.Library;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
-import ch.fever.domotic4j.usbrelay.data.*;
+import ch.fever.usbrelay.data.*;
 
 public interface UsbRelayNative extends Library {
     UsbRelayNative INSTANCE = (UsbRelayNative) Native.loadLibrary("hidapi", UsbRelayNative.class);

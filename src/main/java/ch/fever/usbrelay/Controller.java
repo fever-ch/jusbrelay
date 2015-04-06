@@ -1,4 +1,4 @@
-package ch.fever.domotic4j.usbrelay;
+package ch.fever.usbrelay;
 
 public interface Controller {
     String getIdentifier();

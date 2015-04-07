@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ch.fever.usbrelay.data;
+package ch.fever.usbrelay.jna;
 
 import com.sun.jna.Structure;
 import com.sun.jna.WString;

@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-package ch.fever.usbrelay;
+package ch.fever.usbrelay.jna;
 
 import com.sun.jna.Library;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
-import ch.fever.usbrelay.data.*;
 
-public interface UsbRelayNative extends Library {
-    UsbRelayNative INSTANCE = (UsbRelayNative) Native.loadLibrary("hidapi", UsbRelayNative.class);
+public interface HidApiNative extends Library {
+    HidApiNative INSTANCE = (HidApiNative) Native.loadLibrary("hidapi", HidApiNative.class);
 
 
     HidDeviceInfoStructure hid_enumerate(short vendor_id, short product_id);

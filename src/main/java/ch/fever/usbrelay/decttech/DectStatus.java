@@ -22,7 +22,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class DectStatus extends Structure implements Structure.ByReference {
-    public byte id[] = new byte[5];
+    public byte reportId;
+    public byte id[] = new byte[4];
     public byte unused;
     public short state;
 
@@ -34,7 +35,7 @@ public class DectStatus extends Structure implements Structure.ByReference {
     @Override
     protected List getFieldOrder() {
         return Arrays.asList(
-                "id", "unused", "state"
+               "reportId", "id", "unused", "state"
         );
     }
 

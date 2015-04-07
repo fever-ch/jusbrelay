@@ -22,20 +22,19 @@ import java.util.Arrays;
 import java.util.List;
 
 public class DectStatus extends Structure implements Structure.ByReference {
+    public DectStatus() {
+        super(ALIGN_NONE);
+    }
+
     public byte reportId;
     public byte id[] = new byte[4];
     public byte unused;
     public short state;
 
-
-    public int size() {
-        return id.length + 1 + 2;
-    }
-
     @Override
     protected List getFieldOrder() {
         return Arrays.asList(
-               "reportId", "id", "unused", "state"
+                "reportId","id","unused", "state"
         );
     }
 

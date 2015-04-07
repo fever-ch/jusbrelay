@@ -48,8 +48,6 @@ public class Driver implements ch.fever.usbrelay.Driver {
 
             try {
                 return f.apply(pointer);
-            } catch (Exception ex) {
-                throw ex;
             } finally {
                 hidApi.hidClose(pointer);
             }

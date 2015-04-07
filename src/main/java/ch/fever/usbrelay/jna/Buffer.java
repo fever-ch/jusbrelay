@@ -14,10 +14,27 @@
  * limitations under the License.
  */
 
-package ch.fever.usbrelay;
+package ch.fever.usbrelay.jna;
 
-public interface Controller {
-    String getIdentifier();
+import com.sun.jna.Structure;
 
-    Relay[] getRelays();
+import java.util.Collections;
+import java.util.List;
+
+public class Buffer extends Structure implements Structure.ByReference {
+
+     public byte[] bytesArray;
+
+    public Buffer(int len) {
+        bytesArray = new byte[len];
+    }
+
+    public String toString() {
+        return new String(bytesArray);
+    }
+
+    @Override
+    protected List getFieldOrder() {
+        return Collections.singletonList("bytesArray");
+    }
 }

@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2015 Raphael P. Barazzutti
- *
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p/>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,9 +20,9 @@ package ch.fever.usbrelay.decttech;
 import ch.fever.usbrelay.Controller;
 import ch.fever.usbrelay.Relay;
 import ch.fever.usbrelay.State;
-import ch.fever.usbrelay.UsbRelayNative;
-import ch.fever.usbrelay.data.Buffer;
-import ch.fever.usbrelay.data.HidDeviceInfoStructure;
+import ch.fever.usbrelay.jna.Buffer;
+import ch.fever.usbrelay.jna.HidApiDriver;
+import ch.fever.usbrelay.jna.HidDeviceInfoStructure;
 import com.sun.jna.Pointer;
 
 import java.nio.ByteOrder;
@@ -33,8 +33,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Driver implements ch.fever.usbrelay.Driver {
-    final private UsbRelayNative usn = UsbRelayNative.INSTANCE;
-
+    final private HidApiDriver hidApi = new HidApiDriver();
 
     private class DectController implements Controller {
 
@@ -45,10 +44,15 @@ public class Driver implements ch.fever.usbrelay.Driver {
         final private String path;
 
         protected <T> T apply(Function<Pointer, T> f) {
-            Pointer pointer = usn.hid_open_path(path);
-            T ret = f.apply(pointer);
-            usn.hid_close(pointer);
-            return ret;
+            Pointer pointer = hidApi.openPath(path);
+
+            try {
+                return f.apply(pointer);
+            } catch (Exception ex) {
+                throw ex;
+            } finally {
+                hidApi.hidClose(pointer);
+            }
         }
 
         public DectController(HidDeviceInfoStructure infoStructure) {
@@ -58,12 +62,7 @@ public class Driver implements ch.fever.usbrelay.Driver {
 
             path = infoStructure.path;
 
-            identifier = apply(pp ->
-            {
-                DectStatus dectStatus = new DectStatus();
-                usn.hid_get_feature_report(pp, dectStatus, dectStatus.size());
-                return dectStatus.getIdentifier();
-            });
+            identifier = apply(pp -> hidApi.getFeatureReport(pp).getIdentifier());
         }
 
 
@@ -93,15 +92,17 @@ public class Driver implements ch.fever.usbrelay.Driver {
                 buf.bytesArray[1] = st;
                 buf.bytesArray[2] = (byte) (id + 1);
 
-                apply(p -> usn.hid_write(p, buf, buf.size()));
+                apply(p -> {
+                    hidApi.write(p, buf);
+                    return 1;
+                });
             }
 
             @Override
             public State getState() {
                 return apply(p ->
                 {
-                    DectStatus dectStatus = new DectStatus();
-                    usn.hid_get_feature_report(p, dectStatus, dectStatus.size());
+                    DectStatus dectStatus = hidApi.getFeatureReport(p);
                     short state = ByteOrder.nativeOrder().equals(ByteOrder.BIG_ENDIAN) ? dectStatus.state : Short.reverseBytes(dectStatus.state);
                     return ((state >> id) & 1) == 1 ? State.ACTIVE : State.INACTIVE;
                 });
@@ -117,7 +118,7 @@ public class Driver implements ch.fever.usbrelay.Driver {
         short vendor_id = 0x16c0;
         short product_id = 0x05df;
 
-        HidDeviceInfoStructure penum = usn.hid_enumerate(vendor_id, product_id);
+        HidDeviceInfoStructure penum = hidApi.enumerate(vendor_id, product_id);
         HidDeviceInfoStructure p = penum;
 
         while (p != null) {
@@ -126,9 +127,9 @@ public class Driver implements ch.fever.usbrelay.Driver {
         }
 
         if (penum != null)
-            usn.hid_free_enumeration(penum.getPointer());
+            hidApi.freeEnumeration(penum);
 
-        usn.hid_exit();
+        hidApi.hidExit();
         return list;
     }
 }

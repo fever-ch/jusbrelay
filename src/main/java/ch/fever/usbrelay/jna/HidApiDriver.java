@@ -20,15 +20,33 @@ import ch.fever.usbrelay.decttech.DectStatus;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class HidApiDriver {
     final private HidApiNative INSTANCE = (HidApiNative) Native.loadLibrary("hidapi", HidApiNative.class);
 
-    public HidDeviceInfoStructure enumerate(short vendor_id, short product_id) {
+    private HidDeviceInfoStructure enumerate(short vendor_id, short product_id) {
         return INSTANCE.hid_enumerate(vendor_id, product_id);
     }
 
-    public void freeEnumeration(HidDeviceInfoStructure devs) {
+    private void freeEnumeration(HidDeviceInfoStructure devs) {
         INSTANCE.hid_free_enumeration(devs.getPointer());
+    }
+
+    public List<DeviceInfoStructure> getEnumeration(short vendor_id, short product_id) {
+        List<DeviceInfoStructure> list = new LinkedList<>();
+        HidDeviceInfoStructure penum = enumerate(vendor_id, product_id);
+        HidDeviceInfoStructure p = penum;
+
+        while (p != null) {
+            list.add(DeviceInfoStructure.copy(p));
+            p = p.next;
+        }
+
+        if (penum != null)
+            freeEnumeration(penum);
+        return list;
     }
 
     public Pointer openPath(String path) {
@@ -41,7 +59,7 @@ public class HidApiDriver {
     public void sendFeatureReport(Pointer device, Buffer data) {
         int i = INSTANCE.hid_send_feature_report(device, data, data.size());
         if (i < 0)
-            throw new RuntimeException();
+            throw new RuntimeException("hid_send_feature_report returned " + i);
     }
 
     private void getFeatureReport(Pointer device, DectStatus data) {

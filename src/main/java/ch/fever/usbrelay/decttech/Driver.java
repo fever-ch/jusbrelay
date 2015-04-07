@@ -21,16 +21,16 @@ import ch.fever.usbrelay.Controller;
 import ch.fever.usbrelay.Relay;
 import ch.fever.usbrelay.State;
 import ch.fever.usbrelay.jna.Buffer;
+import ch.fever.usbrelay.jna.DeviceInfoStructure;
 import ch.fever.usbrelay.jna.HidApiDriver;
-import ch.fever.usbrelay.jna.HidDeviceInfoStructure;
 import com.sun.jna.Pointer;
 
 import java.nio.ByteOrder;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class Driver implements ch.fever.usbrelay.Driver {
     final private HidApiDriver hidApi = new HidApiDriver();
@@ -55,12 +55,12 @@ public class Driver implements ch.fever.usbrelay.Driver {
             }
         }
 
-        public DectController(HidDeviceInfoStructure infoStructure) {
-            Matcher matcher = pattern.matcher(infoStructure.productString.toString());
+        public DectController(DeviceInfoStructure infoStructure) {
+            Matcher matcher = pattern.matcher(infoStructure.getProductString());
 
             nrRelays = matcher.matches() ? Integer.parseInt(matcher.group(1)) : 0;
 
-            path = infoStructure.path;
+            path = infoStructure.getPath();
 
             identifier = apply(pp -> hidApi.getFeatureReport(pp).getIdentifier());
         }
@@ -114,22 +114,9 @@ public class Driver implements ch.fever.usbrelay.Driver {
 
     @Override
     public List<Controller> listControllers() {
-        List<Controller> list = new LinkedList<>();
-        short vendor_id = 0x16c0;
-        short product_id = 0x05df;
+        short vendorId = 0x16c0;
+        short productId = 0x05df;
 
-        HidDeviceInfoStructure penum = hidApi.enumerate(vendor_id, product_id);
-        HidDeviceInfoStructure p = penum;
-
-        while (p != null) {
-            list.add(new DectController(p));
-            p = p.next;
-        }
-
-        if (penum != null)
-            hidApi.freeEnumeration(penum);
-
-        hidApi.hidExit();
-        return list;
+        return hidApi.getEnumeration(vendorId, productId).stream().map(DectController::new).collect(Collectors.toList());
     }
 }

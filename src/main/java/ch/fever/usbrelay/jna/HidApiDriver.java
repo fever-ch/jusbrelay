@@ -24,7 +24,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class HidApiDriver {
-    final private HidApiNative INSTANCE = (HidApiNative) Native.loadLibrary("hidapi", HidApiNative.class);
+    final private HidApiNative INSTANCE = (HidApiNative)
+            Native.loadLibrary(System.getProperty("os.name").toLowerCase().contains("linux") ? "hidapi-libusb" : "hidapi", HidApiNative.class);
 
     private HidDeviceInfoStructure enumerate(short vendor_id, short product_id) {
         return INSTANCE.hid_enumerate(vendor_id, product_id);
@@ -34,7 +35,7 @@ public class HidApiDriver {
         INSTANCE.hid_free_enumeration(devs.getPointer());
     }
 
-    public List<DeviceInfoStructure> getEnumeration(short vendor_id, short product_id) {
+    synchronized public List<DeviceInfoStructure> getEnumeration(short vendor_id, short product_id) {
         List<DeviceInfoStructure> list = new LinkedList<>();
         HidDeviceInfoStructure penum = enumerate(vendor_id, product_id);
         HidDeviceInfoStructure p = penum;
@@ -49,42 +50,52 @@ public class HidApiDriver {
         return list;
     }
 
-    public Pointer openPath(String path) {
+    synchronized public Pointer openPath(String path) {
+        if (path == null)
+            throw new HidRuntimeException("hid_open_path path is null");
         Pointer ret = INSTANCE.hid_open_path(path);
         if (ret == null)
             throw new HidRuntimeException("hid_open_path returned null");
         return ret;
     }
 
-    public void sendFeatureReport(Pointer device, Buffer data) {
+    synchronized public void sendFeatureReport(Pointer device, Buffer data) {
         int i = INSTANCE.hid_send_feature_report(device, data, data.size());
         if (i < 0)
             throw new RuntimeException("hid_send_feature_report returned " + i);
     }
 
     private void getFeatureReport(Pointer device, DectStatus data) {
-        int i = INSTANCE.hid_get_feature_report(device, data, data.size());
+        int i = INSTANCE.hid_get_feature_report(device, data, data.size() );
+
         if (i < 0)
             throw new HidRuntimeException("hid_get_feature_report returned " + i);
     }
 
-    public DectStatus getFeatureReport(Pointer device) {
-        DectStatus data = new DectStatus();
-        getFeatureReport(device, data);
-        return data;
+    static private String pad(String p) {
+        if (p.length() >= 2)
+            return p;
+        else
+            return pad("0" + p);
     }
 
-    public void write(Pointer device, Buffer data) {
+    synchronized public DectStatus getFeatureReport(Pointer device) {
+        DectStatus dectStatus = new DectStatus();
+        INSTANCE.hid_get_feature_report(device, dectStatus, dectStatus.size());
+        return dectStatus;
+    }
+
+    synchronized public void write(Pointer device, Buffer data) {
         int i = INSTANCE.hid_write(device, data, data.size());
         if (i < 0)
             throw new RuntimeException();
     }
 
-    public void hidClose(Pointer device) {
+    synchronized public void hidClose(Pointer device) {
         INSTANCE.hid_close(device);
     }
 
-    public void hidExit() {
+    synchronized public void hidExit() {
         INSTANCE.hid_exit();
     }
 }

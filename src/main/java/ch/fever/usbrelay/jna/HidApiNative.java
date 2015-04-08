@@ -21,9 +21,6 @@ import com.sun.jna.Native;
 import com.sun.jna.Pointer;
 
 public interface HidApiNative extends Library {
-    HidApiNative INSTANCE = (HidApiNative) Native.loadLibrary("hidapi", HidApiNative.class);
-
-
     HidDeviceInfoStructure hid_enumerate(short vendor_id, short product_id);
 
     void hid_free_enumeration(Pointer devs);
@@ -39,4 +36,6 @@ public interface HidApiNative extends Library {
     void hid_close(Pointer device);
 
     void hid_exit();
+
+    void hid_read(Pointer device, Buffer.ByReference buff, int size);
 }

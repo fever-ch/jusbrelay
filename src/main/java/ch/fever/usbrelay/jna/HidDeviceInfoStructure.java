@@ -41,6 +41,7 @@ public class HidDeviceInfoStructure extends Structure implements Structure.ByRef
 
 
   public HidDeviceInfoStructure next;
+  
 
 
 

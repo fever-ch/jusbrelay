@@ -33,10 +33,24 @@ public class DeviceInfoStructure {
         this.usage = usage;
     }
 
+    static String npeb(Object o) {
+        if (o == null)
+            return "";
+        else
+            return o.toString();
+    }
+
     static public DeviceInfoStructure copy(HidDeviceInfoStructure hidDis) {
-        return new DeviceInfoStructure(hidDis.interfaceNumber, hidDis.path, hidDis.vendorId, hidDis.productId,
-                hidDis.serialNumber.toString(), hidDis.releaseNumber, hidDis.manufacturerString.toString(),
-                hidDis.productString.toString(), hidDis.usagePage, hidDis.usage);
+        return new DeviceInfoStructure(hidDis.interfaceNumber,
+                hidDis.path,
+                hidDis.vendorId,
+                hidDis.productId,
+                npeb(hidDis.serialNumber),
+                hidDis.releaseNumber,
+                npeb(hidDis.manufacturerString),
+                npeb(hidDis.productString),
+                hidDis.usagePage,
+                hidDis.usage);
     }
 
     public int getInterfaceNumber() {

@@ -27,8 +27,8 @@ public class DectStatus extends Structure implements Structure.ByReference {
     }
 
     public byte reportId;
-    public byte id[] = new byte[4];
-    public byte unused;
+    public byte id[] = new byte[5];
+    public short unused;
     public short state;
 
     @Override

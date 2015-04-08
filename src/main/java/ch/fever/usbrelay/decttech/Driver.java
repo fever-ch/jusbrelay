@@ -25,7 +25,6 @@ import ch.fever.usbrelay.jna.DeviceInfoStructure;
 import ch.fever.usbrelay.jna.HidApiDriver;
 import com.sun.jna.Pointer;
 
-import java.nio.ByteOrder;
 import java.util.List;
 import java.util.function.Function;
 import java.util.regex.Matcher;
@@ -84,7 +83,7 @@ public class Driver implements ch.fever.usbrelay.Driver {
             }
 
             @Override
-            public void setState(State state) {
+             public void setState(State state) {
                 byte st = (byte) (state == State.ACTIVE ? 0xff : 0xfd);
                 Buffer buf = new Buffer(9);
                 buf.bytesArray[1] = st;
@@ -101,8 +100,7 @@ public class Driver implements ch.fever.usbrelay.Driver {
                 return apply(p ->
                 {
                     DectStatus dectStatus = hidApi.getFeatureReport(p);
-                    short state = ByteOrder.nativeOrder().equals(ByteOrder.BIG_ENDIAN) ? dectStatus.state : Short.reverseBytes(dectStatus.state);
-                    return ((state >> id) & 1) == 1 ? State.ACTIVE : State.INACTIVE;
+                    return ((dectStatus.state >> id) & 1) == 1 ? State.ACTIVE : State.INACTIVE;
                 });
 
             }

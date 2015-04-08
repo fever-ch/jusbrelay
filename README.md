@@ -14,6 +14,18 @@ This driver aims to provide to the Java ecosystem access to low cost USB relays 
 * Linux Raspberry (arch: armv6l)
 * Mac OS X (with hidapi provided by Homebrew)
  
+# Notes
+## Bug in Mac release of HidApi 0.8.0-rc1
+
+A bug in the implementation of the function hid_get_feature_report for the Mac platform is present in the release candidate
+0.8.0-rc1 of HidApi. This bug prevents many pieces of software (incl. jUSBRelay) to run properly.
+
+[Brew](http://brew.sh) users can install the patched version of HidApi with the following command:
+
+```
+$ brew install https://raw.github.com/rbarazzutti/homebrew/hidapi-0.8.0-rc1-with-macfix/Library/Formula/hidapi.rb
+```
+
 
 ---
 

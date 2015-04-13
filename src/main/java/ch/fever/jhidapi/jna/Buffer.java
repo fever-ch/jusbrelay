@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ch.fever.usbrelay.jna;
+package ch.fever.jhidapi.jna;
 
 import com.sun.jna.Structure;
 
@@ -23,7 +23,7 @@ import java.util.List;
 
 public class Buffer extends Structure implements Structure.ByReference {
 
-     public byte[] bytesArray;
+    public byte[] bytesArray;
 
     public Buffer(int len) {
         bytesArray = new byte[len];

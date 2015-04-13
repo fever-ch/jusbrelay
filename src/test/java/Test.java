@@ -17,14 +17,13 @@
 import ch.fever.usbrelay.Controller;
 import ch.fever.usbrelay.Relay;
 import ch.fever.usbrelay.State;
-import ch.fever.usbrelay.jna.HidApiNative;
 import ch.fever.usbrelay.decttech.Driver;
 
 import java.util.LinkedList;
 import java.util.List;
 
 public class Test {
-    HidApiNative usn = HidApiNative.INSTANCE;
+
 
     @org.junit.Test
     public void testDriver() throws InterruptedException {
@@ -47,15 +46,18 @@ public class Test {
         }
 
 
-        for (Relay r : list)
-            r.setState(State.ACTIVE);
+        for (int i = 0; i < 3; i++) {
+            for (Relay r : list) {
+                Thread.sleep(100);
+                r.swapState();
+            }
 
+        }
 
         Thread.sleep(1000);
 
         for (Relay r : list)
             r.setState(State.INACTIVE);
-
 
 
     }

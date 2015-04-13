@@ -16,12 +16,19 @@
 
 package ch.fever.usbrelay;
 
-public interface Relay {
-    void setState(State state);
+import java.util.Optional;
 
-    default void swapState() {
-        setState(getState() == State.ACTIVE ? State.INACTIVE : State.ACTIVE);
+public interface Relay {
+    default void setState(boolean state){
+        setState(state?State.ACTIVE:State.INACTIVE);
     }
 
-    State getState();
+    void setState(State state);
+
+    Optional<State> getState();
+
+    default void swapState() {
+        setState(getState().orElse(State.ACTIVE) == State.ACTIVE ? State.INACTIVE : State.ACTIVE);
+    }
+
 }

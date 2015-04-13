@@ -17,15 +17,17 @@
 package ch.fever.usbrelay.decttech;
 
 
+import ch.fever.jhidapi.jna.Buffer;
+import ch.fever.jhidapi.jna.FeatureReport;
 import ch.fever.usbrelay.Controller;
 import ch.fever.usbrelay.Relay;
 import ch.fever.usbrelay.State;
-import ch.fever.usbrelay.jna.Buffer;
 import ch.fever.usbrelay.jna.DeviceInfoStructure;
 import ch.fever.usbrelay.jna.HidApiDriver;
 import com.sun.jna.Pointer;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -59,7 +61,21 @@ public class Driver implements ch.fever.usbrelay.Driver {
 
             path = infoStructure.getPath();
 
-            identifier = apply(pp -> hidApi.getFeatureReport(pp).getIdentifier());
+
+
+            identifier = apply(pp ->
+            {
+                FeatureReport fp=new FeatureReport(8);
+                hidApi.getFeatureReport(pp,fp);
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < 5; i++) {
+                    sb.append(Integer.toHexString(0x100 | (0xff & fp.bytesArray[i])).substring(1).toUpperCase());
+
+                    if (i != 4)
+                        sb.append(":");
+                }
+                return sb.toString();
+            });
         }
 
 
@@ -83,7 +99,7 @@ public class Driver implements ch.fever.usbrelay.Driver {
             }
 
             @Override
-             public void setState(State state) {
+            public void setState(State state) {
                 byte st = (byte) (state == State.ACTIVE ? 0xff : 0xfd);
                 Buffer buf = new Buffer(9);
                 buf.bytesArray[1] = st;
@@ -96,11 +112,13 @@ public class Driver implements ch.fever.usbrelay.Driver {
             }
 
             @Override
-            public State getState() {
+            public Optional<State> getState() {
                 return apply(p ->
                 {
-                    DectStatus dectStatus = hidApi.getFeatureReport(p);
-                    return ((dectStatus.state >> id) & 1) == 1 ? State.ACTIVE : State.INACTIVE;
+                    FeatureReport fp=new FeatureReport(8);
+                     hidApi.getFeatureReport(p,fp);
+
+                    return Optional.of(((fp.bytesArray[7] >> id) & 1) == 1 ? State.ACTIVE : State.INACTIVE);
                 });
 
             }

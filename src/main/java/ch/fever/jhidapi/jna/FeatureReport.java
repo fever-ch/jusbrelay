@@ -14,39 +14,29 @@
  * limitations under the License.
  */
 
-package ch.fever.usbrelay.decttech;
+package ch.fever.jhidapi.jna;
 
 import com.sun.jna.Structure;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class DectStatus extends Structure implements Structure.ByReference {
-    public DectStatus() {
-        super(ALIGN_NONE);
-    }
-
+public class FeatureReport extends Structure implements Structure.ByReference {
     public byte reportId;
-    public byte id[] = new byte[5];
-    public short unused;
-    public short state;
+
+    public byte bytesArray[];
+
+    public FeatureReport(int len) {
+        super(ALIGN_NONE);
+        bytesArray = new byte[len];
+
+    }
 
     @Override
     protected List getFieldOrder() {
         return Arrays.asList(
-                "reportId","id","unused", "state"
+                "reportId",
+                "bytesArray"
         );
     }
-
-    public String getIdentifier() {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < id.length; i++) {
-            sb.append(Integer.toHexString(0x100 | (0xff & id[i])).substring(1).toUpperCase());
-
-            if (i != id.length - 1)
-                sb.append(":");
-        }
-        return sb.toString();
-    }
 }
-

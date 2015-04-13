@@ -16,7 +16,10 @@
 
 package ch.fever.usbrelay.jna;
 
-import ch.fever.usbrelay.decttech.DectStatus;
+import ch.fever.jhidapi.jna.Buffer;
+import ch.fever.jhidapi.jna.FeatureReport;
+import ch.fever.jhidapi.jna.HidApiNative;
+import ch.fever.jhidapi.jna.HidDeviceInfoStructure;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
 
@@ -52,40 +55,38 @@ public class HidApiDriver {
 
     synchronized public Pointer openPath(String path) {
         if (path == null)
-            throw new HidRuntimeException("hid_open_path path is null");
+            throw new HidRuntimeException("hid_open_path: path is null");
         Pointer ret = INSTANCE.hid_open_path(path);
         if (ret == null)
             throw new HidRuntimeException("hid_open_path returned null");
         return ret;
     }
 
-    synchronized public void sendFeatureReport(Pointer device, Buffer data) {
-        int i = INSTANCE.hid_send_feature_report(device, data, data.size());
+    synchronized public void sendFeatureReport(Pointer device, FeatureReport featureReport) {
+        if (device == null)
+            throw new RuntimeException("sendFeatureReport: device is null");
+        if (featureReport == null)
+            throw new RuntimeException("sendFeatureReport: featureReport is null");
+        int i = INSTANCE.hid_send_feature_report(device, featureReport, featureReport.size());
         if (i < 0)
             throw new RuntimeException("hid_send_feature_report returned " + i);
     }
 
-    private void getFeatureReport(Pointer device, DectStatus data) {
-        int i = INSTANCE.hid_get_feature_report(device, data, data.size() );
+    synchronized public void getFeatureReport(Pointer device, FeatureReport featureReport) {
+        if (device == null)
+            throw new RuntimeException("sendFeatureReport: device is null");
+        if (featureReport == null)
+            throw new RuntimeException("sendFeatureReport: featureReport is null");
+        int i = INSTANCE.hid_get_feature_report(device, featureReport, featureReport.size());
 
         if (i < 0)
             throw new HidRuntimeException("hid_get_feature_report returned " + i);
     }
 
-    static private String pad(String p) {
-        if (p.length() >= 2)
-            return p;
-        else
-            return pad("0" + p);
-    }
-
-    synchronized public DectStatus getFeatureReport(Pointer device) {
-        DectStatus dectStatus = new DectStatus();
-        INSTANCE.hid_get_feature_report(device, dectStatus, dectStatus.size());
-        return dectStatus;
-    }
 
     synchronized public void write(Pointer device, Buffer data) {
+        if (device == null)
+            throw new RuntimeException("sendFeatureReport: device is null");
         int i = INSTANCE.hid_write(device, data, data.size());
         if (i < 0)
             throw new RuntimeException();

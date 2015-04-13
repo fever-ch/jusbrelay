@@ -23,7 +23,7 @@ A bug in the implementation of the function hid_get_feature_report for the Mac p
 [Brew](http://brew.sh) users can install the patched version of HidApi with the following command:
 
 ```
-$ brew install https://raw.github.com/rbarazzutti/homebrew/hidapi-0.8.0-rc1-with-macfix/Library/Formula/hidapi.rb
+$ brew install https://raw.githubusercontent.com/rbarazzutti/homebrew/hidapi-0.8.0-rc1-patch/Library/Formula/hidapi.rb
 ```
 
 

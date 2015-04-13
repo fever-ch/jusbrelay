@@ -17,6 +17,8 @@
 package ch.fever.usbrelay.jna;
 
 
+import ch.fever.jhidapi.jna.HidDeviceInfoStructure;
+
 public class DeviceInfoStructure {
     private DeviceInfoStructure(int interfaceNumber, String path, short vendorId, short productId, String serialNumber,
                                 short releaseNumber, String manufacturerString, String productString, short usagePage,

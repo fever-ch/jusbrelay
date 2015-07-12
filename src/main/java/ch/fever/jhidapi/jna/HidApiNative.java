@@ -51,7 +51,9 @@ public interface HidApiNative extends Library {
 
     int hid_get_serial_number_string(Pointer device, WString wchar_t, SizeT maxlen);
 
-    int hid_get_indexed_string(Pointer device, int StringIndex, WString wchar_t, SizeT maxlen);;
+    int hid_get_indexed_string(Pointer device, int StringIndex, WString wchar_t, SizeT maxlen);
+
+    ;
 
     WString hid_error(Pointer device);
 }

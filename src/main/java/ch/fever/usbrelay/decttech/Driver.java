@@ -62,11 +62,10 @@ public class Driver implements ch.fever.usbrelay.Driver {
             path = infoStructure.getPath();
 
 
-
             identifier = apply(pp ->
             {
-                FeatureReport fp=new FeatureReport(8);
-                hidApi.getFeatureReport(pp,fp);
+                FeatureReport fp = new FeatureReport(8);
+                hidApi.getFeatureReport(pp, fp);
                 StringBuilder sb = new StringBuilder();
                 for (int i = 0; i < 5; i++) {
                     sb.append(Integer.toHexString(0x100 | (0xff & fp.bytesArray[i])).substring(1).toUpperCase());
@@ -115,8 +114,8 @@ public class Driver implements ch.fever.usbrelay.Driver {
             public Optional<State> getState() {
                 return apply(p ->
                 {
-                    FeatureReport fp=new FeatureReport(8);
-                     hidApi.getFeatureReport(p,fp);
+                    FeatureReport fp = new FeatureReport(8);
+                    hidApi.getFeatureReport(p, fp);
 
                     return Optional.of(((fp.bytesArray[7] >> id) & 1) == 1 ? State.ACTIVE : State.INACTIVE);
                 });

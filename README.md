@@ -6,7 +6,7 @@ This driver aims to provide to the Java ecosystem access to low cost USB relays 
 
 ## Dependencies
 * This driver relies on [JNA](https://github.com/twall/jna) and it this driver brings it transitively we used with Maven.   
-* [HID API](http://www.signal11.us/oss/hidapi) has to be properly installed in order to use this driver. This is ot provided through Maven transitive dependencies.
+* [HID API](http://www.signal11.us/oss/hidapi) has to be properly installed in order to use this driver. This is not provided through Maven transitive dependencies.
 
 ## Compatibility
 ### This library has been successfully tested on the following platforms:
@@ -20,12 +20,9 @@ This driver aims to provide to the Java ecosystem access to low cost USB relays 
 A bug in the implementation of the function hid_get_feature_report for the Mac platform is present in the release candidate
 0.8.0-rc1 of HidApi. This bug prevents many piece of software (incl. usbrelay) to run properly.
 
-[Brew](http://brew.sh) users can install the patched version of HidApi with the following command:
+[Brew](http://brew.sh) provides a patched-version of HidApi which works properly (since April 8th, 2015).
 
-```
-$ brew install https://raw.githubusercontent.com/rbarazzutti/homebrew/hidapi-0.8.0-rc1-patch/Library/Formula/hidapi.rb
-```
-
+A patched version of HidApi is available on my github [HidApi fork](https://github.com/rbarazzutti/hidapi) 
 
 ---
 

@@ -55,7 +55,7 @@ public class HidApiDriver {
 
     synchronized public Pointer openPath(String path) {
         if (path == null)
-            throw new HidRuntimeException("hid_open_path: path is null");
+            throw new NullPointerException();
         Pointer ret = INSTANCE.hid_open_path(path);
         if (ret == null)
             throw new HidRuntimeException("hid_open_path returned null");
@@ -63,30 +63,25 @@ public class HidApiDriver {
     }
 
     synchronized public void sendFeatureReport(Pointer device, FeatureReport featureReport) {
-        if (device == null)
-            throw new RuntimeException("sendFeatureReport: device is null");
-        if (featureReport == null)
-            throw new RuntimeException("sendFeatureReport: featureReport is null");
+        if (device == null || featureReport == null)
+            throw new NullPointerException();
         int i = INSTANCE.hid_send_feature_report(device, featureReport, featureReport.size());
         if (i < 0)
             throw new RuntimeException("hid_send_feature_report returned " + i);
     }
 
     synchronized public void getFeatureReport(Pointer device, FeatureReport featureReport) {
-        if (device == null)
-            throw new RuntimeException("sendFeatureReport: device is null");
-        if (featureReport == null)
-            throw new RuntimeException("sendFeatureReport: featureReport is null");
+        if (device == null || featureReport == null)
+            throw new NullPointerException();
         int i = INSTANCE.hid_get_feature_report(device, featureReport, featureReport.size());
-
         if (i < 0)
             throw new HidRuntimeException("hid_get_feature_report returned " + i);
     }
 
 
     synchronized public void write(Pointer device, Buffer data) {
-        if (device == null)
-            throw new RuntimeException("sendFeatureReport: device is null");
+        if (device == null || data == null)
+            throw new NullPointerException();
         int i = INSTANCE.hid_write(device, data, data.size());
         if (i < 0)
             throw new RuntimeException();

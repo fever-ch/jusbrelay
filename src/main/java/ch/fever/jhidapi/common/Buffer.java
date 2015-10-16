@@ -14,28 +14,35 @@
  * limitations under the License.
  */
 
-package ch.fever.jhidapi.jna;
+package ch.fever.jhidapi.common;
 
 import com.sun.jna.Structure;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
-public class FeatureReport extends Structure implements Structure.ByReference {
-    public byte reportId;
+
+public class Buffer extends Structure implements Structure.ByReference {
 
     public byte bytesArray[];
 
-    public FeatureReport(int len) {
+    public Buffer(byte array[]) {
         super(ALIGN_NONE);
-        bytesArray = new byte[len];
+        bytesArray = array;
+    }
 
+    public byte[] getBytesArray() {
+        return bytesArray;
+    }
+
+
+    public Buffer(int len) {
+        this(new byte[len]);
     }
 
     @Override
     protected List getFieldOrder() {
-        return Arrays.asList(
-                "reportId",
+        return Collections.singletonList(
                 "bytesArray"
         );
     }

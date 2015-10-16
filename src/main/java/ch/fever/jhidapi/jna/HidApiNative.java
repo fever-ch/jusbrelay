@@ -16,6 +16,8 @@
 
 package ch.fever.jhidapi.jna;
 
+import ch.fever.jhidapi.common.Buffer;
+import ch.fever.jhidapi.common.FeatureReport;
 import com.sun.jna.*;
 
 public interface HidApiNative extends Library {

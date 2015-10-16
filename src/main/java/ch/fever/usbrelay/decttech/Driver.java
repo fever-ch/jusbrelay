@@ -17,13 +17,15 @@
 package ch.fever.usbrelay.decttech;
 
 
-import ch.fever.jhidapi.jna.Buffer;
-import ch.fever.jhidapi.jna.FeatureReport;
+import ch.fever.jhidapi.api.DeviceInfoStructure;
+import ch.fever.jhidapi.api.DevicePointer;
+import ch.fever.jhidapi.api.HidApiDriver;
+import ch.fever.jhidapi.api.HidLibException;
+import ch.fever.jhidapi.common.Buffer;
+import ch.fever.jhidapi.common.FeatureReport;
 import ch.fever.usbrelay.Controller;
 import ch.fever.usbrelay.Relay;
 import ch.fever.usbrelay.State;
-import ch.fever.usbrelay.jna.DeviceInfoStructure;
-import ch.fever.usbrelay.jna.HidApiDriver;
 import com.sun.jna.Pointer;
 
 import java.util.List;
@@ -34,7 +36,15 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class Driver implements ch.fever.usbrelay.Driver {
-    final private HidApiDriver hidApi = new HidApiDriver();
+    final private HidApiDriver hidApi;
+
+    private Driver(HidApiDriver hidApiDriver) {
+        this.hidApi = hidApiDriver;
+    }
+
+    static public Driver newInstance() throws HidLibException {
+        return new Driver(HidApiDriver.newInstance());
+    }
 
     private class DectController implements Controller {
 
@@ -50,7 +60,7 @@ public class Driver implements ch.fever.usbrelay.Driver {
             try {
                 return f.apply(pointer);
             } finally {
-                hidApi.hidClose(pointer);
+                hidApi.close(pointer);
             }
         }
 
@@ -60,12 +70,14 @@ public class Driver implements ch.fever.usbrelay.Driver {
             nrRelays = matcher.matches() ? Integer.parseInt(matcher.group(1)) : 0;
 
             path = infoStructure.getPath();
-
+           // DevicePointer pt = infoStructure.openDevice();
 
             identifier = apply(pp ->
             {
                 FeatureReport fp = new FeatureReport(8);
+                //pt.getFeatureReport(fp);
                 hidApi.getFeatureReport(pp, fp);
+
                 StringBuilder sb = new StringBuilder();
                 for (int i = 0; i < 5; i++) {
                     sb.append(Integer.toHexString(0x100 | (0xff & fp.bytesArray[i])).substring(1).toUpperCase());
@@ -99,10 +111,9 @@ public class Driver implements ch.fever.usbrelay.Driver {
 
             @Override
             public void setState(State state) {
-                byte st = (byte) (state == State.ACTIVE ? 0xff : 0xfd);
                 Buffer buf = new Buffer(9);
-                buf.bytesArray[1] = st;
-                buf.bytesArray[2] = (byte) (id + 1);
+                buf.getBytesArray()[1] =  (byte) (state == State.ACTIVE ? 0xff : 0xfd);
+                buf.getBytesArray()[2] = (byte) (id + 1);
 
                 apply(p -> {
                     hidApi.write(p, buf);

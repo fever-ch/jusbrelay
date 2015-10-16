@@ -14,18 +14,29 @@
  * limitations under the License.
  */
 
-package ch.fever.usbrelay.jna;
+package ch.fever.jhidapi.common;
 
-public class HidRuntimeException extends RuntimeException {
-    /**
-     * Constructs a new runtime exception with the specified detail message.
-     * The cause is not initialized, and may subsequently be initialized by a
-     * call to {@link #initCause}.
-     *
-     * @param message the detail message. The detail message is saved for
-     *                later retrieval by the {@link #getMessage()} method.
-     */
-    public HidRuntimeException(String message) {
-        super(message);
+import com.sun.jna.Structure;
+
+import java.util.Arrays;
+import java.util.List;
+
+public class FeatureReport extends Structure implements Structure.ByReference {
+    public byte reportId;
+
+    public byte bytesArray[];
+
+    public FeatureReport(int len) {
+        super(ALIGN_NONE);
+        bytesArray = new byte[len];
+
+    }
+
+    @Override
+    protected List getFieldOrder() {
+        return Arrays.asList(
+                "reportId",
+                "bytesArray"
+        );
     }
 }

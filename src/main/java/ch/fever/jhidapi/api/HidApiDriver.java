@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package ch.fever.usbrelay.jna;
+package ch.fever.jhidapi.api;
 
-import ch.fever.jhidapi.jna.Buffer;
-import ch.fever.jhidapi.jna.FeatureReport;
+import ch.fever.jhidapi.common.Buffer;
+import ch.fever.jhidapi.common.FeatureReport;
 import ch.fever.jhidapi.jna.HidApiNative;
 import ch.fever.jhidapi.jna.HidDeviceInfoStructure;
 import com.sun.jna.Native;
@@ -27,15 +27,33 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class HidApiDriver {
-    final private HidApiNative INSTANCE = (HidApiNative)
-            Native.loadLibrary(System.getProperty("os.name").toLowerCase().contains("linux") ? "hidapi-libusb" : "hidapi", HidApiNative.class);
+    final public HidApiNative hidApiNative;
+
+    static public HidApiDriver newInstance() throws HidLibException {
+        String path = System.getProperty("os.name").toLowerCase().contains("linux") ? "hidapi-libusb" : "hidapi";
+        try {
+            HidApiNative han = (HidApiNative)
+                    Native.loadLibrary(path, HidApiNative.class);
+            return new HidApiDriver(han);
+        } catch (UnsatisfiedLinkError e) {
+            throw new HidLibException("Unable to load the HidApi library from the library search paths");
+        }
+    }
+
+    public void exit() {
+        hidApiNative.hid_exit();
+    }
+
+    private HidApiDriver(HidApiNative hidApiNative) {
+        this.hidApiNative = hidApiNative;
+    }
 
     private HidDeviceInfoStructure enumerate(short vendor_id, short product_id) {
-        return INSTANCE.hid_enumerate(vendor_id, product_id);
+        return hidApiNative.hid_enumerate(vendor_id, product_id);
     }
 
     private void freeEnumeration(HidDeviceInfoStructure devs) {
-        INSTANCE.hid_free_enumeration(devs.getPointer());
+        hidApiNative.hid_free_enumeration(devs.getPointer());
     }
 
     synchronized public List<DeviceInfoStructure> getEnumeration(short vendor_id, short product_id) {
@@ -44,7 +62,7 @@ public class HidApiDriver {
         HidDeviceInfoStructure p = penum;
 
         while (p != null) {
-            list.add(DeviceInfoStructure.copy(p));
+            list.add(DeviceInfoStructure.copy(p,hidApiNative));
             p = p.next;
         }
 
@@ -56,42 +74,57 @@ public class HidApiDriver {
     synchronized public Pointer openPath(String path) {
         if (path == null)
             throw new NullPointerException();
-        Pointer ret = INSTANCE.hid_open_path(path);
+        Pointer ret = hidApiNative.hid_open_path(path);
         if (ret == null)
-            throw new HidRuntimeException("hid_open_path returned null");
+            throw new HidException("hid_open_path returned null while opening "+path);
         return ret;
     }
+
 
     synchronized public void sendFeatureReport(Pointer device, FeatureReport featureReport) {
         if (device == null || featureReport == null)
             throw new NullPointerException();
-        int i = INSTANCE.hid_send_feature_report(device, featureReport, featureReport.size());
+        int i = hidApiNative.hid_send_feature_report(device, featureReport, featureReport.size());
         if (i < 0)
             throw new RuntimeException("hid_send_feature_report returned " + i);
     }
 
+
     synchronized public void getFeatureReport(Pointer device, FeatureReport featureReport) {
         if (device == null || featureReport == null)
             throw new NullPointerException();
-        int i = INSTANCE.hid_get_feature_report(device, featureReport, featureReport.size());
+        int i = hidApiNative.hid_get_feature_report(device, featureReport, featureReport.size());
         if (i < 0)
-            throw new HidRuntimeException("hid_get_feature_report returned " + i);
+            throw new HidException("hid_get_feature_report returned " + i);
     }
 
 
     synchronized public void write(Pointer device, Buffer data) {
         if (device == null || data == null)
             throw new NullPointerException();
-        int i = INSTANCE.hid_write(device, data, data.size());
+        int i = hidApiNative.hid_write(device, data, data.size());
         if (i < 0)
             throw new RuntimeException();
     }
 
-    synchronized public void hidClose(Pointer device) {
-        INSTANCE.hid_close(device);
+    public void write(DevicePointer device, byte[] data) {
+        write(device, new Buffer(data));
+    }
+
+    public void write(DevicePointer device, Buffer data) {
+        write(device.getPointer(), data);
+    }
+
+
+    synchronized public void close(Pointer device) {
+        hidApiNative.hid_close(device);
+    }
+
+    public void close(DevicePointer device) {
+        close(device.getPointer());
     }
 
     synchronized public void hidExit() {
-        INSTANCE.hid_exit();
+        hidApiNative.hid_exit();
     }
 }

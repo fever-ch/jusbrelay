@@ -16,7 +16,7 @@
 
 package ch.fever.usbrelay.decttech;
 
-import ch.fever.jhidapi.jna.FeatureReport;
+import ch.fever.jhidapi.common.FeatureReport;
 
 public class DectFeatureReport extends FeatureReport {
 

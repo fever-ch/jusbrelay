@@ -30,5 +30,4 @@ public interface Relay {
     default void swapState() {
         setState(getState().orElse(State.ACTIVE) == State.ACTIVE ? State.INACTIVE : State.ACTIVE);
     }
-
 }

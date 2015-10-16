@@ -14,15 +14,17 @@
  * limitations under the License.
  */
 
-package ch.fever.usbrelay.jna;
+package ch.fever.jhidapi.api;
 
 
+import ch.fever.jhidapi.jna.HidApiNative;
 import ch.fever.jhidapi.jna.HidDeviceInfoStructure;
+import com.sun.jna.Pointer;
 
 public class DeviceInfoStructure {
     private DeviceInfoStructure(int interfaceNumber, String path, short vendorId, short productId, String serialNumber,
                                 short releaseNumber, String manufacturerString, String productString, short usagePage,
-                                short usage) {
+                                short usage, HidApiNative hidApiNative) {
         this.interfaceNumber = interfaceNumber;
         this.path = path;
         this.vendorId = vendorId;
@@ -33,16 +35,14 @@ public class DeviceInfoStructure {
         this.productString = productString;
         this.usagePage = usagePage;
         this.usage = usage;
+        this.hidApiNative = hidApiNative;
     }
 
     static String npeb(Object o) {
-        if (o == null)
-            return "";
-        else
-            return o.toString();
+        return o != null ? o.toString() : "";
     }
 
-    static public DeviceInfoStructure copy(HidDeviceInfoStructure hidDis) {
+    static public DeviceInfoStructure copy(HidDeviceInfoStructure hidDis, HidApiNative hidApiNative) {
         return new DeviceInfoStructure(hidDis.interfaceNumber,
                 hidDis.path,
                 hidDis.vendorId,
@@ -52,7 +52,8 @@ public class DeviceInfoStructure {
                 npeb(hidDis.manufacturerString),
                 npeb(hidDis.productString),
                 hidDis.usagePage,
-                hidDis.usage);
+                hidDis.usage,
+                hidApiNative);
     }
 
     public int getInterfaceNumber() {
@@ -109,4 +110,13 @@ public class DeviceInfoStructure {
 
     final private short usage;
     final private int interfaceNumber;
+
+    final private HidApiNative hidApiNative;
+
+    public DevicePointer openDevice() {
+        Pointer ret = hidApiNative.hid_open_path(path);
+        if (ret == null)
+            throw new HidException("hid_open_path returned null while opening " + path);
+        return new DevicePointer(hidApiNative, ret);
+    }
 }

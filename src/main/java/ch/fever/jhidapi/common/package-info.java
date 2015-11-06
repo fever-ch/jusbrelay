@@ -14,28 +14,11 @@
  * limitations under the License.
  */
 
+/**
+ * Common classes for HIDAPI.
+ *
+ * General usage classes that are used accessing directly access HIDAPI as well
+ * as in higher level functions.
+ */
+
 package ch.fever.jhidapi.common;
-
-import com.sun.jna.Structure;
-
-import java.util.Arrays;
-import java.util.List;
-
-public class FeatureReport extends Structure implements Structure.ByReference {
-    public byte reportId;
-
-    public byte bytesArray[];
-
-    public FeatureReport(int len) {
-        super(ALIGN_NONE);
-        bytesArray = new byte[len];
-    }
-
-    @Override
-    protected List getFieldOrder() {
-        return Arrays.asList(
-                "reportId",
-                "bytesArray"
-        );
-    }
-}

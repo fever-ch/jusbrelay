@@ -62,7 +62,7 @@ public class HidApiDriver {
         HidDeviceInfoStructure p = penum;
 
         while (p != null) {
-            list.add(DeviceInfoStructure.copy(p,hidApiNative));
+            list.add(DeviceInfoStructure.copy(p, hidApiNative));
             p = p.next;
         }
 
@@ -76,7 +76,7 @@ public class HidApiDriver {
             throw new NullPointerException();
         Pointer ret = hidApiNative.hid_open_path(path);
         if (ret == null)
-            throw new HidException("hid_open_path returned null while opening "+path);
+            throw new HidException("hid_open_path returned null while opening " + path);
         return ret;
     }
 

@@ -14,28 +14,11 @@
  * limitations under the License.
  */
 
-package ch.fever.jhidapi.common;
+/**
+ * Lowest level of JNA bindings to HIDAPI.
+ *
+ * Naked access to HIDAPI
+ */
 
-import com.sun.jna.Structure;
 
-import java.util.Arrays;
-import java.util.List;
-
-public class FeatureReport extends Structure implements Structure.ByReference {
-    public byte reportId;
-
-    public byte bytesArray[];
-
-    public FeatureReport(int len) {
-        super(ALIGN_NONE);
-        bytesArray = new byte[len];
-    }
-
-    @Override
-    protected List getFieldOrder() {
-        return Arrays.asList(
-                "reportId",
-                "bytesArray"
-        );
-    }
-}
+package ch.fever.jhidapi.jna;

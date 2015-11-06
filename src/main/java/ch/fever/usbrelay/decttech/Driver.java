@@ -18,7 +18,6 @@ package ch.fever.usbrelay.decttech;
 
 
 import ch.fever.jhidapi.api.DeviceInfoStructure;
-import ch.fever.jhidapi.api.DevicePointer;
 import ch.fever.jhidapi.api.HidApiDriver;
 import ch.fever.jhidapi.api.HidLibException;
 import ch.fever.jhidapi.common.Buffer;

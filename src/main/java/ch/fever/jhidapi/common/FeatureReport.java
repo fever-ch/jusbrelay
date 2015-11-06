@@ -21,7 +21,7 @@ import com.sun.jna.Structure;
 import java.util.Arrays;
 import java.util.List;
 
-public class FeatureReport extends Structure implements Structure.ByReference {
+public class FeatureReport extends Structure {
     public byte reportId;
 
     public byte bytesArray[];

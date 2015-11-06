@@ -35,7 +35,7 @@ public interface HidApiNative extends Library {
      *
      * This function returns a linked list of all the HID devices attached to the system which match vendor_id and product_id. If vendor_id is set to 0 then any vendor matches. If product_id is set to 0 then any product matches. If vendor_id and product_id are both set to 0, then all HID devices will be returned.
      *
-     * @param vendor_id The Vendor ID (VID) of the types of device to open.
+     * @param vendor_id  The Vendor ID (VID) of the types of device to open.
      * @param product_id The Product ID (PID) of the types of device to open.
      * @return This function returns a pointer to a linked list of type struct hid_device, containing information about the HID devices attached to the system, or NULL in the case of failure. Free this linked list by calling {@link #hid_free_enumeration}.
      */
@@ -54,15 +54,15 @@ public interface HidApiNative extends Library {
 
     Pointer hid_open_path(String path);
 
-    int hid_write(Pointer device, Buffer.ByReference data, int len);
+    int hid_write(Pointer device, Buffer data, int len);
 
-    int hid_read_timeout(Pointer device, Buffer.ByReference buff, int size, int milliseconds);
+    int hid_read_timeout(Pointer device, Buffer buff, int size, int milliseconds);
 
-    int hid_read(Pointer device, Buffer.ByReference buff, int size);
+    int hid_read(Pointer device, Buffer buff, int size);
 
     int hid_set_nonblocking(Pointer device, int nonblock);
 
-    int hid_send_feature_report(Pointer device, FeatureReport.ByReference data, int length);
+    int hid_send_feature_report(Pointer device, FeatureReport data, int length);
 
     /**
      * Get a feature report from a HID device.
@@ -74,7 +74,7 @@ public interface HidApiNative extends Library {
      * @param length The number of bytes to read, including an extra byte for the report ID. The buffer can be longer than the actual report.
      * @return This function returns the number of bytes read plus one for the report ID (which is still in the first byte), or -1 on error.
      */
-    int hid_get_feature_report(Pointer device, FeatureReport.ByReference data, int length);
+    int hid_get_feature_report(Pointer device, FeatureReport data, int length);
 
     /**
      * Close a HID device.

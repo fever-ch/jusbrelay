@@ -19,7 +19,6 @@ package ch.fever.jhidapi.jna;
 import ch.fever.jhidapi.common.Buffer;
 import ch.fever.jhidapi.common.FeatureReport;
 import com.sun.jna.Library;
-import com.sun.jna.Pointer;
 import com.sun.jna.WString;
 
 /**

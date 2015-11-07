@@ -19,7 +19,6 @@ import ch.fever.jhidapi.common.Buffer;
 import ch.fever.jhidapi.common.FeatureReport;
 import ch.fever.jhidapi.jna.HidApiNative;
 import ch.fever.jhidapi.jna.HidDevice;
-import com.sun.jna.Pointer;
 
 public class DevicePointer {
     protected DevicePointer(HidApiNative hidApiNative, HidDevice pointer) {

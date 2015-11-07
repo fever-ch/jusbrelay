@@ -26,7 +26,6 @@ import ch.fever.jhidapi.jna.HidDevice;
 import ch.fever.usbrelay.Controller;
 import ch.fever.usbrelay.Relay;
 import ch.fever.usbrelay.State;
-import com.sun.jna.Pointer;
 
 import java.util.List;
 import java.util.Optional;

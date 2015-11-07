@@ -22,7 +22,6 @@ import ch.fever.jhidapi.jna.HidApiNative;
 import ch.fever.jhidapi.jna.HidDevice;
 import ch.fever.jhidapi.jna.HidDeviceInfoStructure;
 import com.sun.jna.Native;
-import com.sun.jna.Pointer;
 
 import java.util.LinkedList;
 import java.util.List;

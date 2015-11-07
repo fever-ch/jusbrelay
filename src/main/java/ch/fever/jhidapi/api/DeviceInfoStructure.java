@@ -20,7 +20,6 @@ package ch.fever.jhidapi.api;
 import ch.fever.jhidapi.jna.HidApiNative;
 import ch.fever.jhidapi.jna.HidDevice;
 import ch.fever.jhidapi.jna.HidDeviceInfoStructure;
-import com.sun.jna.Pointer;
 
 public class DeviceInfoStructure {
     private DeviceInfoStructure(int interfaceNumber, String path, short vendorId, short productId, String serialNumber,

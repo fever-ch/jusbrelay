@@ -14,7 +14,10 @@ package ch.fever.jusbrelay;/*
  * limitations under the License.
  */
 
+import ch.fever.jhidapi.api.HidApiDriver;
 import ch.fever.jhidapi.api.HidLibException;
+import ch.fever.jhidapi.jna.HidApiNative;
+import ch.fever.jhidapi.jna.HidDeviceInfoStructure;
 import ch.fever.usbrelay.Controller;
 import ch.fever.usbrelay.Relay;
 import ch.fever.usbrelay.decttech.Driver;
@@ -32,8 +35,15 @@ public class JUSBRelayTest {
         List<Relay> list = new LinkedList<>();
 
         for (Controller c : (Driver.newInstance()).listControllers()) {
+            System.out.println(c.getIdentifier());
             list.addAll(Arrays.asList(c.getRelays()));
         }
+
+        HidApiNative han = HidApiDriver.newInstance().hidApiNative;
+        short vendorId = 0x16c0;
+        short productId = 0x05df;
+        HidDeviceInfoStructure his = han.hid_enumerate(vendorId, productId);
+
 
         for (int i = 0; i < 2; i++) {
             list.forEach(Relay::swapState);

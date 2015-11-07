@@ -19,6 +19,7 @@ package ch.fever.jhidapi.api;
 import ch.fever.jhidapi.common.Buffer;
 import ch.fever.jhidapi.common.FeatureReport;
 import ch.fever.jhidapi.jna.HidApiNative;
+import ch.fever.jhidapi.jna.HidDevice;
 import ch.fever.jhidapi.jna.HidDeviceInfoStructure;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
@@ -53,7 +54,7 @@ public class HidApiDriver {
     }
 
     private void freeEnumeration(HidDeviceInfoStructure devs) {
-        hidApiNative.hid_free_enumeration(devs.getPointer());
+        hidApiNative.hid_free_enumeration(devs);
     }
 
     synchronized public List<DeviceInfoStructure> getEnumeration(short vendor_id, short product_id) {
@@ -71,17 +72,17 @@ public class HidApiDriver {
         return list;
     }
 
-    synchronized public Pointer openPath(String path) {
+    synchronized public HidDevice openPath(String path) {
         if (path == null)
             throw new NullPointerException();
-        Pointer ret = hidApiNative.hid_open_path(path);
+        HidDevice ret = hidApiNative.hid_open_path(path);
         if (ret == null)
             throw new HidException("hid_open_path returned null while opening " + path);
         return ret;
     }
 
 
-    synchronized public void sendFeatureReport(Pointer device, FeatureReport featureReport) {
+    synchronized public void sendFeatureReport(HidDevice device, FeatureReport featureReport) {
         if (device == null || featureReport == null)
             throw new NullPointerException();
         int i = hidApiNative.hid_send_feature_report(device, featureReport, featureReport.size());
@@ -90,7 +91,7 @@ public class HidApiDriver {
     }
 
 
-    synchronized public void getFeatureReport(Pointer device, FeatureReport featureReport) {
+    synchronized public void getFeatureReport(HidDevice device, FeatureReport featureReport) {
         if (device == null || featureReport == null)
             throw new NullPointerException();
         int i = hidApiNative.hid_get_feature_report(device, featureReport, featureReport.size());
@@ -99,7 +100,7 @@ public class HidApiDriver {
     }
 
 
-    synchronized public void write(Pointer device, Buffer data) {
+    synchronized public void write(HidDevice device, Buffer data) {
         if (device == null || data == null)
             throw new NullPointerException();
         int i = hidApiNative.hid_write(device, data, data.size());
@@ -116,7 +117,7 @@ public class HidApiDriver {
     }
 
 
-    synchronized public void close(Pointer device) {
+    synchronized public void close(HidDevice device) {
         hidApiNative.hid_close(device);
     }
 

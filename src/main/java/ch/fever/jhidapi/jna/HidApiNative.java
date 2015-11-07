@@ -72,7 +72,7 @@ public interface HidApiNative extends Library {
      *
      * @param devs Pointer to a list of struct_device returned from {@link #hid_enumerate}
      */
-    void hid_free_enumeration(Pointer devs);
+    void hid_free_enumeration(HidDeviceInfoStructure devs);
 
     /**
      * Open a HID device using a Vendor ID (VID), Product ID (PID) and optionally a serial number.
@@ -84,7 +84,7 @@ public interface HidApiNative extends Library {
      * @param serial_number The Serial Number of the device to open (Optionally NULL).
      * @return This function returns a pointer to a hid_device object on success or NULL on failure.
      */
-    Pointer hid_open(short vendor_id, short product_id, WString serial_number);
+    HidDevice hid_open(short vendor_id, short product_id, WString serial_number);
 
     /**
      * Open a HID device by its path name.
@@ -95,7 +95,7 @@ public interface HidApiNative extends Library {
      * @param path The path name of the device to open
      * @return This function returns a pointer to a hid_device object on success or NULL on failure.
      */
-    Pointer hid_open_path(String path);
+    HidDevice hid_open_path(String path);
 
     /**
      * Write an Output report to a HID device.
@@ -114,7 +114,7 @@ public interface HidApiNative extends Library {
      * @param length The length in bytes of the data to send.
      * @return This function returns the actual number of bytes written and -1 on error.
      */
-    int hid_write(Pointer device, Buffer data, int length);
+    int hid_write(HidDevice device, Buffer data, int length);
 
     /**
      * Read an Input report from a HID device with timeout.
@@ -130,7 +130,7 @@ public interface HidApiNative extends Library {
      * @return This function returns the actual number of bytes read and -1 on error. If no packet was available to be
      * read within the timeout period, this function returns 0.
      */
-    int hid_read_timeout(Pointer device, Buffer data, int length, int milliseconds);
+    int hid_read_timeout(HidDevice device, Buffer data, int length, int milliseconds);
 
     /**
      * Read an Input report from a HID device.
@@ -145,7 +145,7 @@ public interface HidApiNative extends Library {
      * @return This function returns the actual number of bytes read and -1 on error. If no packet was available to be
      * read and the handle is in non-blocking mode, this function returns 0.
      */
-    int hid_read(Pointer device, Buffer data, int length);
+    int hid_read(HidDevice device, Buffer data, int length);
 
     /**
      * Set the device handle to be non-blocking.
@@ -163,9 +163,9 @@ public interface HidApiNative extends Library {
      *                 </ul>
      * @return This function returns 0 on success and -1 on error.
      */
-    int hid_set_nonblocking(Pointer device, int nonblock);
+    int hid_set_nonblocking(HidDevice device, int nonblock);
 
-    int hid_send_feature_report(Pointer device, FeatureReport data, int length);
+    int hid_send_feature_report(HidDevice device, FeatureReport data, int length);
 
     /**
      * Get a feature report from a HID device.
@@ -181,14 +181,14 @@ public interface HidApiNative extends Library {
      * @return This function returns the number of bytes read plus one for the report ID (which is still in the first
      * byte), or -1 on error.
      */
-    int hid_get_feature_report(Pointer device, FeatureReport data, int length);
+    int hid_get_feature_report(HidDevice device, FeatureReport data, int length);
 
     /**
      * Close a HID device.
      *
      * @param device A device handle returned from {@link #hid_open}.
      */
-    void hid_close(Pointer device);
+    void hid_close(HidDevice device);
 
     /**
      * Get The Manufacturer String from a HID device.
@@ -198,7 +198,7 @@ public interface HidApiNative extends Library {
      * @param maxlen The length of the buffer in multiples of wchar_t.
      * @return This function returns 0 on success and -1 on error.
      */
-    int hid_get_manufacturer_string(Pointer device, WString string, SizeT maxlen);
+    int hid_get_manufacturer_string(HidDevice device, WString string, SizeT maxlen);
 
     /**
      * Get The Product String from a HID device.
@@ -208,7 +208,7 @@ public interface HidApiNative extends Library {
      * @param maxlen The length of the buffer in multiples of wchar_t.
      * @return This function returns 0 on success and -1 on error.
      */
-    int hid_get_product_string(Pointer device, WString string, SizeT maxlen);
+    int hid_get_product_string(HidDevice device, WString string, SizeT maxlen);
 
     /**
      * Get The Serial Number String from a HID device.
@@ -218,7 +218,7 @@ public interface HidApiNative extends Library {
      * @param maxlen The length of the buffer in multiples of wchar_t.
      * @return This function returns 0 on success and -1 on error.
      */
-    int hid_get_serial_number_string(Pointer device, WString string, SizeT maxlen);
+    int hid_get_serial_number_string(HidDevice device, WString string, SizeT maxlen);
 
     /**
      * Get a string from a HID device, based on its string index.
@@ -229,7 +229,7 @@ public interface HidApiNative extends Library {
      * @param maxlen       The length of the buffer in multiples of wchar_t.
      * @return This function returns 0 on success and -1 on error.
      */
-    int hid_get_indexed_string(Pointer device, int string_index, WString string, SizeT maxlen);
+    int hid_get_indexed_string(HidDevice device, int string_index, WString string, SizeT maxlen);
 
     /**
      * Get a string describing the last error which occurred.
@@ -237,5 +237,5 @@ public interface HidApiNative extends Library {
      * @param device A device handle returned from {@link #hid_open}.
      * @return This function returns a string containing the last error which occurred or NULL if none has occurred.
      */
-    WString hid_error(Pointer device);
+    WString hid_error(HidDevice device);
 }

@@ -22,6 +22,7 @@ import ch.fever.jhidapi.api.HidApiDriver;
 import ch.fever.jhidapi.api.HidLibException;
 import ch.fever.jhidapi.common.Buffer;
 import ch.fever.jhidapi.common.FeatureReport;
+import ch.fever.jhidapi.jna.HidDevice;
 import ch.fever.usbrelay.Controller;
 import ch.fever.usbrelay.Relay;
 import ch.fever.usbrelay.State;
@@ -53,8 +54,8 @@ public class Driver implements ch.fever.usbrelay.Driver {
 
         final private String path;
 
-        protected <T> T apply(Function<Pointer, T> f) {
-            Pointer pointer = hidApi.openPath(path);
+        protected <T> T apply(Function<HidDevice, T> f) {
+            HidDevice pointer = hidApi.openPath(path);
 
             try {
                 return f.apply(pointer);

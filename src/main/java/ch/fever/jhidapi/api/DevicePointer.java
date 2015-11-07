@@ -18,15 +18,16 @@ package ch.fever.jhidapi.api;
 import ch.fever.jhidapi.common.Buffer;
 import ch.fever.jhidapi.common.FeatureReport;
 import ch.fever.jhidapi.jna.HidApiNative;
+import ch.fever.jhidapi.jna.HidDevice;
 import com.sun.jna.Pointer;
 
 public class DevicePointer {
-    protected DevicePointer(HidApiNative hidApiNative, Pointer pointer) {
+    protected DevicePointer(HidApiNative hidApiNative, HidDevice pointer) {
         this.pointer = pointer;
         this.hidApiNative = hidApiNative;
     }
 
-    public Pointer getPointer() {
+    public HidDevice getPointer() {
         return pointer;
     }
 
@@ -35,7 +36,7 @@ public class DevicePointer {
         hidApiNative.hid_close(pointer);
     }
 
-    final private Pointer pointer;
+    final private HidDevice pointer;
     final private HidApiNative hidApiNative;
 
 

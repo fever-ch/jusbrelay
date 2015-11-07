@@ -18,6 +18,7 @@ package ch.fever.jhidapi.api;
 
 
 import ch.fever.jhidapi.jna.HidApiNative;
+import ch.fever.jhidapi.jna.HidDevice;
 import ch.fever.jhidapi.jna.HidDeviceInfoStructure;
 import com.sun.jna.Pointer;
 
@@ -114,7 +115,7 @@ public class DeviceInfoStructure {
     final private HidApiNative hidApiNative;
 
     public DevicePointer openDevice() {
-        Pointer ret = hidApiNative.hid_open_path(path);
+        HidDevice ret = hidApiNative.hid_open_path(path);
         if (ret == null)
             throw new HidException("hid_open_path returned null while opening " + path);
         return new DevicePointer(hidApiNative, ret);

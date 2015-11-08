@@ -169,9 +169,9 @@ public interface HidApiNative extends Library {
      *
      * Feature reports are sent over the Control endpoint as a Set_Report transfer. The first byte of data[] must
      * contain the Report ID. For devices which only support a single report, this must be set to 0x0. The remaining
-     * bytes contain the report data. Since the Report ID is mandatory, calls to hid_send_feature_report() will always
-     * contain one more byte than the report contains. For example, if a hid report is 16 bytes long, 17 bytes must be
-     * passed to {@link #hid_send_feature_report}: the Report ID (or 0x0, for devices which do not use numbered
+     * bytes contain the report data. Since the Report ID is mandatory, calls to {@link #hid_send_feature_report} will
+     * always contain one more byte than the report contains. For example, if a hid report is 16 bytes long, 17 bytes
+     * must be passed to {@link #hid_send_feature_report}: the Report ID (or 0x0, for devices which do not use numbered
      * reports), followed by the report data (16 bytes). In this example, the length passed in would be 17.
      *
      * @param device A device handle returned from {@link #hid_open}.

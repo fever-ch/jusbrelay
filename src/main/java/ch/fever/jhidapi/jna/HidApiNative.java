@@ -31,8 +31,8 @@ public interface HidApiNative extends Library {
      * Initialize the HIDAPI library.
      *
      * This function initializes the HIDAPI library. Calling it is not strictly necessary, as it will be called
-     * automatically by {@link #hid_enumerate}, {@link #hid_open(short, short, WString)} and
-     * {@link #hid_open_path(String)} if it is needed. This function should be called at the beginning of execution
+     * automatically by {@link #hid_enumerate}, {@link #hid_open} and
+     * {@link #hid_open_path} if it is needed. This function should be called at the beginning of execution
      * however, if there is a chance of HIDAPI handles being opened by different threads simultaneously.
      *
      * @return This function returns 0 on success and -1 on error.

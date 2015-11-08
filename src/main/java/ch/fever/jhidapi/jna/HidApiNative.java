@@ -62,7 +62,7 @@ public interface HidApiNative extends Library {
      * the HID devices attached to the system, or NULL in the case of failure. Free this linked list by calling
      * {@link #hid_free_enumeration}.
      */
-    HidDeviceInfoStructure hid_enumerate(short vendor_id, short product_id);
+    HidDeviceInfoStructure.ByReference hid_enumerate(short vendor_id, short product_id);
 
     /**
      * Free an enumeration Linked List.
@@ -71,7 +71,7 @@ public interface HidApiNative extends Library {
      *
      * @param devs Pointer to a list of struct_device returned from {@link #hid_enumerate}
      */
-    void hid_free_enumeration(HidDeviceInfoStructure devs);
+    void hid_free_enumeration(HidDeviceInfoStructure.ByReference devs);
 
     /**
      * Open a HID device using a Vendor ID (VID), Product ID (PID) and optionally a serial number.

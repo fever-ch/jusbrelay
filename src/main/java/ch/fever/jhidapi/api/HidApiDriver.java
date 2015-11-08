@@ -48,18 +48,18 @@ public class HidApiDriver {
         this.hidApiNative = hidApiNative;
     }
 
-    private HidDeviceInfoStructure enumerate(short vendor_id, short product_id) {
+    private HidDeviceInfoStructure.ByReference enumerate(short vendor_id, short product_id) {
         return hidApiNative.hid_enumerate(vendor_id, product_id);
     }
 
-    private void freeEnumeration(HidDeviceInfoStructure devs) {
+    private void freeEnumeration(HidDeviceInfoStructure.ByReference devs) {
         hidApiNative.hid_free_enumeration(devs);
     }
 
     synchronized public List<DeviceInfoStructure> getEnumeration(short vendor_id, short product_id) {
         List<DeviceInfoStructure> list = new LinkedList<>();
-        HidDeviceInfoStructure penum = enumerate(vendor_id, product_id);
-        HidDeviceInfoStructure p = penum;
+        HidDeviceInfoStructure.ByReference penum = enumerate(vendor_id, product_id);
+        HidDeviceInfoStructure.ByReference p = penum;
 
         while (p != null) {
             list.add(DeviceInfoStructure.copy(p, hidApiNative));

@@ -171,22 +171,22 @@ public interface HidApiNative extends Library {
      * contain the Report ID. For devices which only support a single report, this must be set to 0x0. The remaining
      * bytes contain the report data. Since the Report ID is mandatory, calls to hid_send_feature_report() will always
      * contain one more byte than the report contains. For example, if a hid report is 16 bytes long, 17 bytes must be
-     * passed to hid_send_feature_report(): the Report ID (or 0x0, for devices which do not use numbered reports),
-     * followed by the report data (16 bytes). In this example, the length passed in would be 17.
+     * passed to {@link #hid_send_feature_report}: the Report ID (or 0x0, for devices which do not use numbered
+     * reports), followed by the report data (16 bytes). In this example, the length passed in would be 17.
      *
-     * @param device A device handle returned from hid_open().
+     * @param device A device handle returned from {@link #hid_open}.
      * @param data   The data to send, including the report number as the first byte.
      * @param length The length in bytes of the data to send, including the report number.
      * @return This function returns the actual number of bytes written and -1 on error.
      */
-    
     int hid_send_feature_report(HidDevice device, FeatureReport data, int length);
 
     /**
      * Get a feature report from a HID device.
      *
      * Set the first byte of data[] to the Report ID of the report to be read. Make sure to allow space for this extra
-     * byte in data[]. Upon return, the first byte will still contain the Report ID, and the report data will start in data[1].
+     * byte in data[]. Upon return, the first byte will still contain the Report ID, and the report data will start in
+     * data[1].
      *
      * @param device A device handle returned from {@link #hid_open}.
      * @param data   A buffer to put the read data into, including the Report ID. Set the first byte of data[] to the

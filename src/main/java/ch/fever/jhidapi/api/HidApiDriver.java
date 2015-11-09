@@ -19,6 +19,7 @@ package ch.fever.jhidapi.api;
 import ch.fever.jhidapi.common.Buffer;
 import ch.fever.jhidapi.common.FeatureReport;
 import ch.fever.jhidapi.jna.HidApiNative;
+import ch.fever.jhidapi.jna.HidApiNativeDriver;
 import ch.fever.jhidapi.jna.HidDevice;
 import ch.fever.jhidapi.jna.HidDeviceInfoStructure;
 import com.sun.jna.Native;
@@ -29,15 +30,8 @@ import java.util.List;
 public class HidApiDriver {
     final public HidApiNative hidApiNative;
 
-    static public HidApiDriver newInstance() throws HidLibException {
-        String path = System.getProperty("os.name").toLowerCase().contains("linux") ? "hidapi-libusb" : "hidapi";
-        try {
-            HidApiNative han = (HidApiNative)
-                    Native.loadLibrary(path, HidApiNative.class);
-            return new HidApiDriver(han);
-        } catch (UnsatisfiedLinkError e) {
-            throw new HidLibException("Unable to load the HidApi library from the library search paths");
-        }
+    static public HidApiDriver newInstance() throws Exception {
+        return new HidApiDriver(HidApiNativeDriver.newInstance());
     }
 
     public void exit() {

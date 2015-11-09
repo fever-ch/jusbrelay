@@ -1,4 +1,4 @@
-package ch.fever.jusbrelay;/*
+/*
  * Copyright (C) 2015 Raphael P. Barazzutti
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,6 +13,7 @@ package ch.fever.jusbrelay;/*
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package ch.fever.jusbrelay;
 
 import ch.fever.jhidapi.api.HidApiDriver;
 import ch.fever.jhidapi.api.HidLibException;
@@ -21,6 +22,7 @@ import ch.fever.jhidapi.jna.HidDeviceInfoStructure;
 import ch.fever.usbrelay.Controller;
 import ch.fever.usbrelay.Relay;
 import ch.fever.usbrelay.decttech.Driver;
+import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -30,12 +32,11 @@ import java.util.List;
 public class JUSBRelayTest {
 
 
-    @org.junit.Test
+    @Test
     public void testDriver() throws InterruptedException, HidLibException {
         List<Relay> list = new LinkedList<>();
 
         for (Controller c : (Driver.newInstance()).listControllers()) {
-            System.out.println(c.getIdentifier());
             list.addAll(Arrays.asList(c.getRelays()));
         }
 

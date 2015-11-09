@@ -26,7 +26,7 @@ import java.util.function.Function;
 public class NativeTest {
     final Logger logger = LoggerFactory.getLogger(NativeTest.class);
 
-    HidApiNative han;
+    private HidApiNative han;
 
     @Before
     public void prepare() throws Exception {

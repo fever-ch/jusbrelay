@@ -15,42 +15,45 @@
  */
 package ch.fever.jusbrelay;
 
-import ch.fever.jhidapi.api.HidApiDriver;
-import ch.fever.jhidapi.api.HidLibException;
-import ch.fever.jhidapi.jna.HidApiNative;
-import ch.fever.jhidapi.jna.HidDeviceInfoStructure;
 import ch.fever.jhidapi.jna.JHidApiException;
 import ch.fever.usbrelay.Controller;
 import ch.fever.usbrelay.Relay;
 import ch.fever.usbrelay.decttech.Driver;
+import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
 
-public class JUSBRelayTest {
+public class USBRelaysTest {
+    final Logger logger = LoggerFactory.getLogger(USBRelaysTest.class);
 
+    private Driver driver;
 
-    @Test
-    public void testDriver() throws InterruptedException, JHidApiException {
-        List<Relay> list = new LinkedList<>();
-
-        for (Controller c : (Driver.newInstance()).listControllers()) {
-            list.addAll(Arrays.asList(c.getRelays()));
-        }
-
-        HidApiNative han = HidApiDriver.newInstance().hidApiNative;
-        short vendorId = 0x16c0;
-        short productId = 0x05df;
-        HidDeviceInfoStructure his = han.hid_enumerate(vendorId, productId);
-
-
-        for (int i = 0; i < 2; i++) {
-            list.forEach(Relay::swapState);
-        }
+    @Before
+    public void prepare() throws JHidApiException {
+        driver = Driver.newInstance();
     }
 
+    @Test
+    public void dectTechTest() throws InterruptedException, JHidApiException {
+        List<Relay> list = new LinkedList<>();
+
+        boolean empty = true;
+        for (Controller c : driver.listControllers())
+            for (Relay r : c.getRelays()) {
+                // loop on available relays
+                empty = false;
+                list.add(r);
+            }
+        if (empty) logger.warn("No USB Relay device found. Test still pass");
+
+        for (int i = 0; i < 2; i++)
+            list.forEach(Relay::swapState);
+
+    }
 }
 

@@ -22,7 +22,7 @@ import java.util.Collections;
 import java.util.List;
 
 
-public class Buffer extends Structure  {
+public class Buffer extends Structure {
 
     public byte bytesArray[];
 

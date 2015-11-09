@@ -22,8 +22,9 @@ import com.sun.jna.WString;
 import java.util.Arrays;
 import java.util.List;
 
-public class HidDeviceInfoStructure extends Structure  {
-    public static class ByReference extends HidDeviceInfoStructure implements Structure.ByReference {}
+public class HidDeviceInfoStructure extends Structure {
+    public static class ByReference extends HidDeviceInfoStructure implements Structure.ByReference {
+    }
 
     public String path;
 

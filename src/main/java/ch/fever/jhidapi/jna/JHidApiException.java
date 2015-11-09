@@ -13,20 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package ch.fever.jhidapi.jna;
 
-import com.sun.jna.Native;
-
-public class HidApiNativeDriver {
-    static public HidApiNative newInstance() throws JHidApiException {
-        String path = System.getProperty("os.name").toLowerCase().contains("linux") ? "hidapi-libusb" : "hidapi";
-        try {
-            HidApiNative han = (HidApiNative)
-                    Native.loadLibrary(path, HidApiNative.class);
-            return han;
-        } catch (UnsatisfiedLinkError e) {
-            throw new JHidApiException("Unable to load the HidApi library from the library search paths");
-        }
+public class JHidApiException extends Exception {
+    /**
+     * Constructs a new exception with the specified detail message.
+     * The cause is not initialized, and may subsequently be initialized by a
+     * call to {@link #initCause}.
+     *
+     * @param message the detail message. The detail message is saved for
+     *                later retrieval by the {@link #getMessage()} method.
+     */
+    public JHidApiException(String message) {
+        super(message);
     }
-
 }

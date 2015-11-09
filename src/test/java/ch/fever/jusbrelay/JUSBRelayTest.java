@@ -19,6 +19,7 @@ import ch.fever.jhidapi.api.HidApiDriver;
 import ch.fever.jhidapi.api.HidLibException;
 import ch.fever.jhidapi.jna.HidApiNative;
 import ch.fever.jhidapi.jna.HidDeviceInfoStructure;
+import ch.fever.jhidapi.jna.JHidApiException;
 import ch.fever.usbrelay.Controller;
 import ch.fever.usbrelay.Relay;
 import ch.fever.usbrelay.decttech.Driver;
@@ -33,7 +34,7 @@ public class JUSBRelayTest {
 
 
     @Test
-    public void testDriver() throws InterruptedException, HidLibException {
+    public void testDriver() throws InterruptedException, JHidApiException {
         List<Relay> list = new LinkedList<>();
 
         for (Controller c : (Driver.newInstance()).listControllers()) {

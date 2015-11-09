@@ -16,13 +16,12 @@
 
 package ch.fever.usbrelay.decttech;
 
-
 import ch.fever.jhidapi.api.DeviceInfoStructure;
 import ch.fever.jhidapi.api.HidApiDriver;
-import ch.fever.jhidapi.api.HidLibException;
 import ch.fever.jhidapi.common.Buffer;
 import ch.fever.jhidapi.common.FeatureReport;
 import ch.fever.jhidapi.jna.HidDevice;
+import ch.fever.jhidapi.jna.JHidApiException;
 import ch.fever.usbrelay.Controller;
 import ch.fever.usbrelay.Relay;
 import ch.fever.usbrelay.State;
@@ -41,7 +40,7 @@ public class Driver implements ch.fever.usbrelay.Driver {
         this.hidApi = hidApiDriver;
     }
 
-    static public Driver newInstance() throws HidLibException {
+    static public Driver newInstance() throws JHidApiException {
         return new Driver(HidApiDriver.newInstance());
     }
 
@@ -69,7 +68,7 @@ public class Driver implements ch.fever.usbrelay.Driver {
             nrRelays = matcher.matches() ? Integer.parseInt(matcher.group(1)) : 0;
 
             path = infoStructure.getPath();
-           // DevicePointer pt = infoStructure.openDevice();
+            // DevicePointer pt = infoStructure.openDevice();
 
             identifier = apply(pp ->
             {
@@ -111,7 +110,7 @@ public class Driver implements ch.fever.usbrelay.Driver {
             @Override
             public void setState(State state) {
                 Buffer buf = new Buffer(9);
-                buf.getBytesArray()[1] =  (byte) (state == State.ACTIVE ? 0xff : 0xfd);
+                buf.getBytesArray()[1] = (byte) (state == State.ACTIVE ? 0xff : 0xfd);
                 buf.getBytesArray()[2] = (byte) (id + 1);
 
                 apply(p -> {

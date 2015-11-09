@@ -18,11 +18,7 @@ package ch.fever.jhidapi.api;
 
 import ch.fever.jhidapi.common.Buffer;
 import ch.fever.jhidapi.common.FeatureReport;
-import ch.fever.jhidapi.jna.HidApiNative;
-import ch.fever.jhidapi.jna.HidApiNativeDriver;
-import ch.fever.jhidapi.jna.HidDevice;
-import ch.fever.jhidapi.jna.HidDeviceInfoStructure;
-import com.sun.jna.Native;
+import ch.fever.jhidapi.jna.*;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -30,7 +26,7 @@ import java.util.List;
 public class HidApiDriver {
     final public HidApiNative hidApiNative;
 
-    static public HidApiDriver newInstance() throws Exception {
+    static public HidApiDriver newInstance() throws JHidApiException {
         return new HidApiDriver(HidApiNativeDriver.newInstance());
     }
 

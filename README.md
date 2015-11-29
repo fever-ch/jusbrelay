@@ -10,7 +10,7 @@ This driver aims to provide to the Java ecosystem access to low cost USB relays 
 
 ## Compatibility
 ### This library has been successfully tested on the following platforms:
-* Linux desktop machine (arch: amd64) 
+* Linux desktop machine (arch: amd64 and i386) 
 * Linux Raspberry (arch: armv6l)
 * Mac OS X (with hidapi provided by Homebrew)
  
@@ -26,7 +26,7 @@ A patched version of HidApi is available on my github [HidApi fork](https://gith
 
 ---
 
-Copyright (C) 2015 Raphael P. Barazzutti
+Copyright (C) 2015 Raphaël P. Barazzutti
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
